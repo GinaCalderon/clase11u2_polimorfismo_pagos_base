@@ -1,15 +1,22 @@
-/**
- * Superclase base para el sistema de pagos polimórficos.
- * PASO 1: Revisa los atributos protegidos y los métodos definidos aquí.
- * Luego, las subclases deberán heredar de MetodoPago y redefinir los métodos
- * indicados usando @Override.
- */
 public class MetodoPago {
-    // TODO 1: Declarar atributos protected: referencia (String), titular (String), montoBase (double)
+
+    protected String referencia;
+    protected String titular;
+    protected double montoBase;
 
     public MetodoPago(String referencia, String titular, double montoBase) {
-        // TODO 2: Validar que referencia y titular no estén vacíos y montoBase > 0
-        // Luego asignar los valores a los atributos de la clase
+        if (referencia == null || referencia.trim().isEmpty()) {
+            throw new IllegalArgumentException("La referencia no puede estar vacía");
+        }
+        if (titular == null || titular.trim().isEmpty()) {
+            throw new IllegalArgumentException("El titular no puede estar vacío");
+        }
+        if (montoBase <= 0) {
+            throw new IllegalArgumentException("El monto debe ser mayor que cero");
+        }
+        this.referencia = referencia;
+        this.titular = titular;
+        this.montoBase = montoBase;
     }
 
     public double calcularComision() {
@@ -17,7 +24,7 @@ public class MetodoPago {
     }
 
     public double calcularTotal() {
-        return 0.0; // TODO 3: Retornar montoBase + calcularComision()
+        return montoBase + calcularComision();
     }
 
     public String procesarPago() {
@@ -25,9 +32,23 @@ public class MetodoPago {
     }
 
     public String mostrarComprobante() {
-        // TODO 4: Retornar una cadena con referencia, titular, base, comisión y total
-        return "";
+        return String.format(
+                "Referencia: %s | Titular: %s | Base: $%.2f | Comisión: $%.2f | Total: $%.2f",
+                referencia,
+                titular,
+                montoBase,
+                calcularComision(),
+                calcularTotal());
     }
 
-    // TODO 5: Sobreescribir @Override public String toString() con un resumen compacto
+    @Override
+    public String toString() {
+        return String.format(
+                "MetodoPago{referencia='%s', titular='%s', montoBase=%.2f, comision=%.2f, total=%.2f}",
+                referencia,
+                titular,
+                montoBase,
+                calcularComision(),
+                calcularTotal());
+    }
 }

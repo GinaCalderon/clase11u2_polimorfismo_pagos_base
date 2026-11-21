@@ -1,19 +1,51 @@
-/**
- * Subclase para pagos con tarjeta de crédito o débito (comisión 3.5%).
- */
-public class PagoTarjeta /* TODO 1: extends MetodoPago */ {
+public class PagoTarjeta extends MetodoPago {
+
     private String ultimosCuatroDigitos;
     private String franquicia;
 
-    public PagoTarjeta(String referencia, String titular, double montoBase, String ultimosCuatroDigitos, String franquicia) {
-        // TODO 2: Invocar super(...) y validar que ultimosCuatroDigitos tenga longitud 4
+    public PagoTarjeta(String referencia, String titular,
+            double montoBase, String ultimosCuatroDigitos,
+            String franquicia) {
+
+        super(referencia, titular, montoBase);
+
+        if (ultimosCuatroDigitos == null ||
+                !ultimosCuatroDigitos.matches("\\d{4}")) {
+            throw new IllegalArgumentException(
+                    "Debe ingresar exactamente cuatro dígitos");
+        }
+
+        if (franquicia == null || franquicia.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "La franquicia no puede estar vacía");
+        }
+
+        this.ultimosCuatroDigitos = ultimosCuatroDigitos;
+        this.franquicia = franquicia;
     }
 
-    // TODO 3: Sobreescribir @Override calcularComision() -> 3.5% de montoBase (montoBase * 0.035)
+    @Override
+    public double calcularComision() {
+        return montoBase * 0.035;
+    }
 
-    // TODO 4: Sobreescribir @Override procesarPago() mostrando franquicia y ****digitos
+    @Override
+    public String procesarPago() {
+        return "Pago con tarjeta " + franquicia
+                + " ****" + ultimosCuatroDigitos + " aprobado";
+    }
 
-    // TODO 5: Sobreescribir @Override mostrarComprobante() extendiendo super.mostrarComprobante()
+    @Override
+    public String mostrarComprobante() {
+        return super.mostrarComprobante()
+                + " | Franquicia: " + franquicia
+                + " | Tarjeta: ****" + ultimosCuatroDigitos;
+    }
 
-    // TODO 6: Sobreescribir @Override toString() extendiendo super.toString()
+    @Override
+    public String toString() {
+        return "PagoTarjeta{" + super.toString()
+                + ", franquicia='" + franquicia
+                + "', tarjeta='****" + ultimosCuatroDigitos + "'}";
+    }
 }

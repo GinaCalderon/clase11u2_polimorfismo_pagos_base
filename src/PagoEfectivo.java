@@ -1,25 +1,49 @@
-/**
- * Subclase para pagos en efectivo.
- * PASO 2: Aplicar herencia (extends MetodoPago) y sobreescribir métodos con @Override.
- */
-public class PagoEfectivo /* TODO 1: extends MetodoPago */ {
+public class PagoEfectivo extends MetodoPago {
+
     private double montoEntregado;
 
-    public PagoEfectivo(String referencia, String titular, double montoBase, double montoEntregado) {
-        // TODO 2: Invocar super(referencia, titular, montoBase)
-        // TODO 3: Validar que montoEntregado >= montoBase y asignarlo
+    public PagoEfectivo(String referencia, String titular,
+            double montoBase, double montoEntregado) {
+
+        super(referencia, titular, montoBase);
+
+        if (montoEntregado < montoBase) {
+            throw new IllegalArgumentException(
+                    "El monto entregado no puede ser menor al monto base");
+        }
+
+        this.montoEntregado = montoEntregado;
     }
 
     public double calcularVuelto() {
-        // TODO 4: Retornar montoEntregado - calcularTotal()
+        return montoEntregado - calcularTotal();
+    }
+
+    @Override
+    public double calcularComision() {
         return 0.0;
     }
 
-    // TODO 5: Sobreescribir @Override calcularComision() retornando 0.0
+    @Override
+    public String procesarPago() {
+        return String.format(
+                "Pago en efectivo confirmado. Vuelto: $%.2f",
+                calcularVuelto());
+    }
 
-    // TODO 6: Sobreescribir @Override procesarPago() indicando confirmación y vuelto
+    @Override
+    public String mostrarComprobante() {
+        return super.mostrarComprobante()
+                + String.format(
+                        " | Entregado: $%.2f | Vuelto: $%.2f",
+                        montoEntregado, calcularVuelto());
+    }
 
-    // TODO 7: Sobreescribir @Override mostrarComprobante() reutilizando super.mostrarComprobante()
-
-    // TODO 8: Sobreescribir @Override toString() reutilizando super.toString()
+    @Override
+    public String toString() {
+        return "PagoEfectivo{" + super.toString()
+                + String.format(
+                        ", montoEntregado=%.2f, vuelto=%.2f}",
+                        montoEntregado, calcularVuelto());
+    }
 }
